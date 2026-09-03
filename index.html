@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TikTok SF</title>
+<style>
+:root{
+  --bg:#000;
+  --separator:rgba(255,255,255,.10);
+  --label:#fff;
+  --label-2:rgba(235,235,245,.60);
+  --label-3:rgba(235,235,245,.32);
+  --accent:#ee9237;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue","Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:var(--font);background:#0a0a0c;color:var(--label);min-height:100dvh;-webkit-font-smoothing:antialiased}
+
+/* ---------- desktop stage: phone standing in the monitor ---------- */
+.stage{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:40px 20px;position:relative;overflow:hidden}
+.stage::before,.stage::after{content:"";position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
+.stage::before{width:620px;height:620px;background:radial-gradient(circle,rgba(238,146,55,.34),transparent 68%);top:-160px;left:50%;transform:translateX(-62%)}
+.stage::after{width:560px;height:560px;background:radial-gradient(circle,rgba(70,92,235,.30),transparent 68%);bottom:-180px;left:50%;transform:translateX(28%)}
+.device{
+  position:relative;z-index:1;width:400px;height:844px;border-radius:58px;padding:11px;
+  background:linear-gradient(160deg,#3a3a3e,#0e0e10 34%,#08080a 66%,#2e2e32);
+  box-shadow:0 2px 2px rgba(255,255,255,.16) inset,0 60px 120px -30px rgba(0,0,0,.9),0 0 0 1px rgba(0,0,0,.6);
+}
+.screen{position:relative;width:100%;height:100%;border-radius:47px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:118px;height:34px;border-radius:20px;background:#000;z-index:40}
+.statusbar{position:absolute;top:0;left:0;right:0;height:56px;z-index:35;display:flex;align-items:center;justify-content:space-between;padding:16px 30px 0;font-size:15px;font-weight:600;pointer-events:none}
+.statusbar .icons{display:flex;align-items:center;gap:6px}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:rgba(255,255,255,.32);z-index:37}
+
+/* ---------- sticky App Store nav ---------- */
+.navbar{
+  position:absolute;top:0;left:0;right:0;height:56px;z-index:30;
+  display:flex;align-items:flex-end;gap:10px;padding:0 16px 8px;
+  background:rgba(0,0,0,.6);
+  -webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);
+  border-bottom:1px solid transparent;
+  opacity:0;transform:translateY(-6px);transition:opacity .26s ease,transform .26s ease,border-color .26s ease;
+  pointer-events:none;
+}
+.navbar.show{opacity:1;transform:none;border-bottom-color:var(--separator);pointer-events:auto}
+.navbar .mini{
+  width:30px;height:30px;border-radius:7px;flex:none;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#2a2a2e,#000 55%);
+  border:1px solid rgba(255,255,255,.14);
+  display:grid;place-items:center;
+}
+.navbar .mini-name{flex:1;min-width:0;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- scroller ---------- */
+.scroller{flex:1;overflow-y:auto;overflow-x:hidden;padding:70px 0 48px;scrollbar-width:none}
+.scroller::-webkit-scrollbar{display:none}
+.pad{padding:0 18px}
+
+/* ---------- product header ---------- */
+.product{display:flex;gap:14px;align-items:flex-start}
+.appicon{
+  width:112px;height:112px;flex:none;border-radius:25px;
+  background:linear-gradient(160deg,#2b2b30,#050506 52%,#000);
+  border:1px solid rgba(255,255,255,.12);
+  display:grid;place-items:center;position:relative;overflow:hidden;
+  box-shadow:0 14px 30px -12px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.22) inset;
+}
+.appicon::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.14),transparent 44%)}
+.appicon svg{position:relative;z-index:1}
+.product-info{flex:1;min-width:0;padding-top:2px;display:flex;flex-direction:column;height:112px}
+.product-info h1{margin:0;font-size:21px;font-weight:700;letter-spacing:-.4px;line-height:1.2}
+.product-info .sub{margin:3px 0 0;font-size:13px;color:var(--label-2);line-height:1.35}
+.get-row{margin-top:auto;display:flex;align-items:center}
+.get{
+  border:0;cursor:pointer;text-decoration:none;
+  min-width:92px;height:32px;padding:0 20px;border-radius:16px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--font);font-size:15px;font-weight:700;letter-spacing:.2px;color:#fff;
+  background:linear-gradient(180deg,#ffa84f,var(--accent) 55%,#dd7c22);
+  box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 8px 18px -8px rgba(238,146,55,.8);
+  transition:transform .18s cubic-bezier(.32,.72,0,1),filter .18s ease;
+}
+.get:active{transform:scale(.94);filter:brightness(.93)}
+.get.small{height:29px;min-width:80px;font-size:14px;padding:0 16px}
+
+/* ---------- meta strip ---------- */
+.strip{display:flex;margin:22px 0 4px;padding:2px 0;overflow-x:auto;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.strip .cell{flex:1;min-width:0;padding:0 12px;text-align:center;border-right:1px solid var(--separator)}
+.strip .cell:last-child{border-right:0}
+.strip .k{font-size:10px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--label-3);white-space:nowrap}
+.strip .v{font-size:15px;font-weight:600;color:var(--label-2);margin-top:5px;white-space:nowrap}
+.strip .v.big{font-size:17px;font-weight:700}
+
+/* ---------- text sections ---------- */
+.sec{margin-top:32px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.sec-head h2{margin:0;font-size:22px;font-weight:700;letter-spacing:-.4px}
+.sec p{margin:0 0 12px;font-size:15px;line-height:1.52;color:rgba(235,235,245,.86)}
+.sec p.dim{color:var(--label-2);font-size:14px}
+
+/* ---------- phone: drop the frame ---------- */
+@media (max-width:900px){
+  .stage{padding:0;display:block}
+  .stage::before,.stage::after{display:none}
+  .device{width:100%;height:100dvh;border-radius:0;padding:0;background:none;box-shadow:none}
+  .screen{border-radius:0}
+  .island,.statusbar,.homebar{display:none}
+  .scroller{padding-top:calc(22px + env(safe-area-inset-top));padding-bottom:calc(56px + env(safe-area-inset-bottom))}
+  .navbar{padding-top:env(safe-area-inset-top);height:calc(52px + env(safe-area-inset-top))}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="device">
+    <div class="screen">
+      <div class="island"></div>
+      <div class="statusbar">
+        <span id="clock">9:41</span>
+        <span class="icons">
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect y="7" width="3" height="4" rx="1"/><rect x="4.6" y="5" width="3" height="6" rx="1"/><rect x="9.2" y="2.6" width="3" height="8.4" rx="1"/><rect x="13.8" width="3" height="11" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 11.2 6.1 9.3a2.7 2.7 0 0 1 3.8 0L8 11.2Zm0-4.3a5 5 0 0 0-3.5 1.4L3.1 6.9a7 7 0 0 1 9.8 0l-1.4 1.4A5 5 0 0 0 8 6.9Zm0-4A9 9 0 0 0 1.6 5.5L.2 4.1a11 11 0 0 1 15.6 0l-1.4 1.4A9 9 0 0 0 8 2.9Z"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".7" y=".7" width="20" height="10.6" rx="3.2" stroke="currentColor" stroke-opacity=".45"/><rect x="2.4" y="2.4" width="14" height="7.2" rx="2" fill="currentColor"/><path d="M22.4 4.2v3.6a2 2 0 0 0 0-3.6Z" fill="currentColor" fill-opacity=".45"/></svg>
+        </span>
+      </div>
+
+      <div class="navbar" id="navbar">
+        <span class="mini">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M16.6 5.8a4.3 4.3 0 0 1-1-2.8h-2.9v11.4a2.5 2.5 0 1 1-2.5-2.5c.26 0 .5.04.74.11V9.03a5.4 5.4 0 1 0 4.66 5.35V8.9a7.1 7.1 0 0 0 4.15 1.33V7.35a4.2 4.2 0 0 1-3.15-1.55Z"/></svg>
+        </span>
+        <span class="mini-name">TikTok SF</span>
+        <a class="get small" href="TikTok-SF.apk" download data-get>Install</a>
+      </div>
+
+      <div class="scroller" id="scroller">
+        <div class="pad">
+
+          <div class="product">
+            <div class="appicon">
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="#fff">
+                <path d="M16.6 5.8a4.3 4.3 0 0 1-1-2.8h-2.9v11.4a2.5 2.5 0 1 1-2.5-2.5c.26 0 .5.04.74.11V9.03a5.4 5.4 0 1 0 4.66 5.35V8.9a7.1 7.1 0 0 0 4.15 1.33V7.35a4.2 4.2 0 0 1-3.15-1.55Z"/>
+              </svg>
+            </div>
+            <div class="product-info">
+              <h1>TikTok SF</h1>
+              <p class="sub">A client dressed in iOS 26</p>
+              <div class="get-row">
+                <a class="get" href="TikTok-SF.apk" download data-get>Install</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="strip">
+            <div class="cell"><div class="k">Age</div><div class="v big">12+</div></div>
+            <div class="cell"><div class="k">Size</div><div class="v">501 MB</div></div>
+            <div class="cell"><div class="k">Category</div><div class="v">Video</div></div>
+            <div class="cell"><div class="k">Version</div><div class="v">45.9.3</div></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-head"><h2>Description</h2></div>
+            <p>Not by AI 100%</p>
+          </div>
+
+
+        </div>
+      </div>
+      <div class="homebar"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var scroller = document.getElementById('scroller');
+  var navbar   = document.getElementById('navbar');
+
+  scroller.addEventListener('scroll', function(){
+    navbar.classList.toggle('show', scroller.scrollTop > 60);
+  }, {passive:true});
+
+  function tick(){
+    var d = new Date();
+    document.getElementById('clock').textContent = d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+  }
+  tick(); setInterval(tick, 20000);
+})();
+</script>
+</body>
+</html>
